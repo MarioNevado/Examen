@@ -8,6 +8,7 @@ import adt.examen.controller.AuthorService;
 import adt.examen.controller.BookService;
 import adt.examen.model.Author;
 import adt.examen.model.Book;
+import java.time.LocalDateTime;
 import java.util.Scanner;
 
 /**
@@ -44,7 +45,7 @@ public class Exec {
 
     public static void main(String[] args) {
         String option;
-        authorController.createAuthor(new Author("anonymous", "guest", "1234", null));
+        //authorController.createAuthor(new Author("anonymous", "guest", "1234", null));
         do {
             option = menu();
             switch (option) {
@@ -66,11 +67,22 @@ public class Exec {
                 case "6":
                     getBooks();
                     break;
+                case "7":
+                    getLastLogIn();
+                    break;
                 default:
                     System.out.println("Adiós...");
                     break;
             }
         } while (!option.equals("*"));
+    }
+    
+    public static void getLastLogIn(){
+        try{
+        System.out.println("Última vez: " + user.getFormattedLogIn()); 
+        }catch(NullPointerException nullException){
+            System.err.println("No hay login que mostrar");
+        }
     }
     
     public static void getBooks(){
@@ -144,8 +156,9 @@ public class Exec {
         if (author == null) {
             System.err.println("Usuario o contraseña inválidos");
         } else {
-            System.out.println("Sesión iniciada con éxito");
+            author.setLastLogIn(LocalDateTime.now());
             user = author;
+            System.out.println("Sesión iniciada con éxito");
         }
         return false;
     }
@@ -160,17 +173,18 @@ public class Exec {
             System.out.println("4.- Comentar libro");
             System.out.println("5.- Ver libros leídos");
             System.out.println("6.- Ver libros disponibles");
+            System.out.println("7.- Ver último inicio de sesión");
             System.out.println("*.- Salir");
             System.out.print("Introducir opción: ");
             option = sc.nextLine();
             if (!option.equals("1") && !option.equals("2") && !option.equals("3") && !option.equals("4") && !option.equals("5")
-                    && !option.equals("6") && !option.equals("*")) {
+                    && !option.equals("6")&& !option.equals("7") && !option.equals("*")) {
                 System.err.println("Opción incorrecta");
             } else {
                 return option;
             }
         } while (!option.equals("1") && !option.equals("2") && !option.equals("3") && !option.equals("4") && !option.equals("5")
-                && !option.equals("6") && !option.equals("*"));
+                && !option.equals("6") && !option.equals("7")&& !option.equals("*"));
 
         return null;
     }

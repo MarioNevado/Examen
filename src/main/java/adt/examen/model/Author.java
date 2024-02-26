@@ -5,6 +5,7 @@
 package adt.examen.model;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +31,8 @@ public class Author {
     
     @Column(name="email")
     private String email;
+    @Column(name="login")
+    private LocalDateTime lastLogIn;
     
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(name = "written_books", joinColumns = @JoinColumn(name="author_id"), inverseJoinColumns = @JoinColumn(name="book_id"))
@@ -42,6 +45,8 @@ public class Author {
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE},fetch = FetchType.EAGER)
     @JoinTable(name = "commented_books", joinColumns = @JoinColumn(name="author_id"), inverseJoinColumns = @JoinColumn(name="book_id"))
     private List<Book> commentedBooks= new ArrayList<>();
+    
+    
 
     public Author() {
     }
@@ -51,6 +56,7 @@ public class Author {
         this.username = username;
         this.password = password;
         this.email = email;
+        this.lastLogIn = LocalDateTime.now();
     }
 
     public String getEmail() {
@@ -116,6 +122,20 @@ public class Author {
     public void setCommentedBooks(List<Book> commentedBooks) {
         this.commentedBooks = commentedBooks;
     }
+
+    public LocalDateTime getLastLogIn() {
+        return lastLogIn;
+    }
+    public String getFormattedLogIn() {
+        return Integer.toString(lastLogIn.getDayOfMonth()) + "/" +Integer.toString(lastLogIn.getMonthValue()) + "/" + Integer.toString(lastLogIn.getYear())+
+                "\t" + Integer.toString(lastLogIn.getHour())+ ":" + Integer.toString(lastLogIn.getMinute())+ ":" + Integer.toString(lastLogIn.getSecond());
+    }
+
+    public void setLastLogIn(LocalDateTime lastLogIn) {
+        this.lastLogIn = lastLogIn;
+    }
+    
+    
     
     
 }
