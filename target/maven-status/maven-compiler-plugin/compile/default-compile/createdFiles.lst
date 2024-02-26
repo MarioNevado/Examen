@@ -4,6 +4,7 @@ adt/examen/utils/HibernateUtil.class
 adt/examen/dao/BookDAO.class
 adt/examen/controller/AuthorService.class
 adt/examen/model/Author.class
+adt/examen/model/Comment.class
 adt/examen/implementations/BookImpl.class
 adt/examen/implementations/AuthorImpl.class
 adt/examen/model/Book.class

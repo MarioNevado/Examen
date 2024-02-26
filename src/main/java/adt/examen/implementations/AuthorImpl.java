@@ -40,8 +40,8 @@ public class AuthorImpl implements AuthorDAO{
                 tx.commit();
             }
         }catch(Exception e){
-            if(tx != null && tx.isActive()) tx.rollback();
             e.printStackTrace();
+            if(tx != null) tx.rollback();
         }
     }
 

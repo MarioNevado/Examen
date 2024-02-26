@@ -8,33 +8,13 @@ import adt.examen.controller.AuthorService;
 import adt.examen.controller.BookService;
 import adt.examen.model.Author;
 import adt.examen.model.Book;
+import adt.examen.model.Review;
 import java.time.LocalDateTime;
 import java.util.Scanner;
 
 /**
  *
  * @author mario
- */
-/*
-Para la siguiente tarea tienes que diseñar un programa que haciendo uso de Java e Hibernate se cumplan los siguiente requisitos:
-    Una persona puede escribir uno o varios libros y un libro puede ser escrito por una o varias personas.
-    Una persona puede leer varios libros y un libro puede ser leído por varias personas.
-    Una persona puede comentar un libro o varios y un libro puede ser comentado por varias personas.
-    De una persona queremos saber su nombre, su nombre de usuario, su contraseña y su correo electrónico.
-    De un libro queremos saber su titulo y numero de páginas.
-    ?- Cuando una persona comenta un libro, le da una valoración entre 0 y 5 y le añade un comentario.
-    Un usuario tiene que poder hacer login (username y contraseña correctas)
-    ?- Un usuario tiene que poder marcar como leido un libro.
-    ? Un usuario tiene que poder indicar que ha escrito un libro.
-    - Un usuario tiene que poder comentar/valorar un libro.
-    Cuando un usuario haga login, se tiene que actualizar la última vez que lo hizo.
-    Un usuario puede ver todos los libros que ha leido.
-    Un usuario puede ver todos los libros disponibles
-    El main tiene que demostrar que cada una de estas partes son usables.
-    Se debe de utilizar una arquitectura DAO.
-    La entrega se realizará a través del aula virtual y github. 
-
-Todos los puntos menos el último (que no puntúa) puntúan lo mismo, te recomiendo que dediques solo 3 horas a realizar esta tarea.
  */
 public class Exec {
 
@@ -70,11 +50,55 @@ public class Exec {
                 case "7":
                     getLastLogIn();
                     break;
+                case "8":
+                    devActions(); //dev
+                    break;
                 default:
                     System.out.println("Adiós...");
                     break;
             }
         } while (!option.equals("*"));
+    }
+
+    public static void devActions() {
+        String answer;
+        System.out.print("Introducir contraseña: ");
+        answer = sc.nextLine();
+        if (answer.equals("dev")) {
+            System.out.print("Añadir usuario?(y/n): ");
+            answer = sc.nextLine();
+            if (answer.equalsIgnoreCase("y")) {
+                createAuthor();
+            }
+            System.out.print("Añadir libro?(y/n): ");
+            answer = sc.nextLine();
+            if (answer.equalsIgnoreCase("y")) {
+                createBook();
+            }
+        }
+    }
+
+    private static void createBook() {
+        String title;
+        long pages;
+        System.out.println("Título: ");
+        title = sc.nextLine();
+        System.out.println("Páginas: ");
+        pages = Long.parseLong(sc.nextLine());
+        bookController.createBook(new Book(title, pages));
+    }
+
+    private static void createAuthor() {
+        String name, username, password, email;
+        System.out.println("Nombre: ");
+        name = sc.nextLine();
+        System.out.println("Nombre de usuario: ");
+        username = sc.nextLine();
+        System.out.println("Contraseña: ");
+        password = sc.nextLine();
+        System.out.println("Email: ");
+        email = sc.nextLine();
+        authorController.createAuthor(new Author(name, username, password, email));
     }
 
     public static void getLastLogIn() {
@@ -119,14 +143,14 @@ public class Exec {
         System.out.print("Introducir título: ");
         title = sc.nextLine();
         do {
-            System.out.println("Introducir número de páginas: ");
-            try{
+            System.out.print("Introducir número de páginas: ");
+            try {
                 pages = Long.parseLong(sc.nextLine());
                 flag = true;
-            }catch(NumberFormatException nbe){
+            } catch (NumberFormatException nbe) {
                 System.err.println("Eso no es un número...");
             }
-            
+
         } while (!flag);
         Book book = new Book(title, pages);
         bookController.createBook(book);
@@ -137,17 +161,26 @@ public class Exec {
     }
 
     public static void commentBook() {
-        String title;
+        String title, comment;
+        float valoration;
+        Review review;
         System.out.print("Introducir título: ");
         title = sc.nextLine();
         Book book = bookController.getBook(title);
         if (book == null) {
             System.err.println("No existen coincidencias");
         } else {
-            user.getCommentedBooks().add(book);
-            book.getCommentedAuthors().add(user);
+            System.out.print("Introducir valoración: ");
+            valoration = Float.parseFloat(sc.nextLine());
+            System.out.println("Introducir commentario: ");
+            comment = sc.nextLine();
+            review = new Review(valoration, comment);
+            review.setAuthor(user);
+            review.setBook(book);
+            user.getCommentedBooks().add(review);
+            book.getCommentedAuthors().add(review);
             authorController.updateAuthor(user);
-            //TODO tema de valoraciones de 0 a 5
+            bookController.updateBook(book);
         }
 
     }
@@ -181,17 +214,18 @@ public class Exec {
             System.out.println("5.- Ver libros leídos");
             System.out.println("6.- Ver libros disponibles");
             System.out.println("7.- Ver último inicio de sesión");
+            System.out.println("8.- Opciones de administrador");
             System.out.println("*.- Salir");
             System.out.print("Introducir opción: ");
             option = sc.nextLine();
             if (!option.equals("1") && !option.equals("2") && !option.equals("3") && !option.equals("4") && !option.equals("5")
-                    && !option.equals("6") && !option.equals("7") && !option.equals("*")) {
+                    && !option.equals("6") && !option.equals("7") && !option.equals("8") && !option.equals("*")) {
                 System.err.println("Opción incorrecta");
             } else {
                 return option;
             }
         } while (!option.equals("1") && !option.equals("2") && !option.equals("3") && !option.equals("4") && !option.equals("5")
-                && !option.equals("6") && !option.equals("7") && !option.equals("*"));
+                && !option.equals("6") && !option.equals("7") && !option.equals("8") && !option.equals("*"));
 
         return null;
     }

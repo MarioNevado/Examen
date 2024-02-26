@@ -31,9 +31,8 @@ public class Book {
     @JoinTable(name = "readed_books", joinColumns = @JoinColumn(name="book_id"), inverseJoinColumns = @JoinColumn(name="author_id"))
     private List<Author> readedAuthors= new ArrayList<>();
     
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE},fetch = FetchType.EAGER)
-    @JoinTable(name = "commented_books", joinColumns = @JoinColumn(name="book_id"), inverseJoinColumns = @JoinColumn(name="author_id"))
-    private List<Author> commentedAuthors= new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "book", fetch = FetchType.EAGER)
+    private List<Review> comments= new ArrayList<>();
 
     public Book() {
     }
@@ -83,12 +82,12 @@ public class Book {
         this.readedAuthors = readedAuthors;
     }
 
-    public List<Author> getCommentedAuthors() {
-        return commentedAuthors;
+    public List<Review> getCommentedAuthors() {
+        return comments;
     }
 
-    public void setCommentedAuthors(List<Author> commentedAuthors) {
-        this.commentedAuthors = commentedAuthors;
+    public void setCommentedAuthors(List<Review> commentedAuthors) {
+        this.comments = commentedAuthors;
     }
 
     @Override

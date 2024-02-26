@@ -34,17 +34,16 @@ public class Author {
     @Column(name="login")
     private LocalDateTime lastLogIn;
     
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
     @JoinTable(name = "written_books", joinColumns = @JoinColumn(name="author_id"), inverseJoinColumns = @JoinColumn(name="book_id"))
     private List<Book> writtenBooks= new ArrayList<>();
     
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE},fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE},fetch = FetchType.EAGER)
     @JoinTable(name = "readed_books", joinColumns = @JoinColumn(name="author_id"), inverseJoinColumns = @JoinColumn(name="book_id"))
     private List<Book> readedBooks= new ArrayList<>();
     
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE},fetch = FetchType.EAGER)
-    @JoinTable(name = "commented_books", joinColumns = @JoinColumn(name="author_id"), inverseJoinColumns = @JoinColumn(name="book_id"))
-    private List<Book> commentedBooks= new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "author", fetch = FetchType.EAGER)
+    private List<Review> comments= new ArrayList<>();
     
     
 
@@ -115,12 +114,12 @@ public class Author {
         this.readedBooks = readedBooks;
     }
 
-    public List<Book> getCommentedBooks() {
-        return commentedBooks;
+    public List<Review> getCommentedBooks() {
+        return comments;
     }
 
-    public void setCommentedBooks(List<Book> commentedBooks) {
-        this.commentedBooks = commentedBooks;
+    public void setCommentedBooks(List<Review> comments) {
+        this.comments = comments;
     }
 
     public LocalDateTime getLastLogIn() {

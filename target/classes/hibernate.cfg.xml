@@ -19,5 +19,6 @@
         <!-- Entity class mapping -->
         <mapping class="adt.examen.model.Author" />
         <mapping class="adt.examen.model.Book" />
+        <mapping class="adt.examen.model.Comment" />
     </session-factory>
 </hibernate-configuration>

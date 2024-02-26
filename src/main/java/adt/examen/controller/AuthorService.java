@@ -25,7 +25,7 @@ public class AuthorService {
             CriteriaBuilder cb = session.getCriteriaBuilder();
             CriteriaQuery<Author> cQuery = cb.createQuery(Author.class);
             Root<Author> root = cQuery.from(Author.class);
-            cQuery.where(cb.equal(root, id));
+            cQuery.where(cb.equal(root.get("id"), id));
             Query<Author> query = session.createQuery(cQuery);
             return query.getSingleResult();
         }catch(NoResultException nre){
