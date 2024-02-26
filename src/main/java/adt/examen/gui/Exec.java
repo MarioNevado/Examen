@@ -22,17 +22,17 @@ Para la siguiente tarea tienes que diseñar un programa que haciendo uso de Java
     Una persona puede comentar un libro o varios y un libro puede ser comentado por varias personas.
     De una persona queremos saber su nombre, su nombre de usuario, su contraseña y su correo electrónico.
     De un libro queremos saber su titulo y numero de páginas.
-    - Cuando una persona comenta un libro, le da una valoración entre 0 y 5 y le añade un comentario.
+    ?- Cuando una persona comenta un libro, le da una valoración entre 0 y 5 y le añade un comentario.
     Un usuario tiene que poder hacer login (username y contraseña correctas)
-    Un usuario tiene que poder marcar como leido un libro.
-    Un usuario tiene que poder indicar que ha escrito un libro.
+    ?- Un usuario tiene que poder marcar como leido un libro.
+    ? Un usuario tiene que poder indicar que ha escrito un libro.
     - Un usuario tiene que poder comentar/valorar un libro.
-    - Cuando un usuario haga login, se tiene que actualizar la última vez que lo hizo.
-    - Un usuario puede ver todos los libros que ha leido.
-    - Un usuario puede ver todos los libros disponibles
-    - El main tiene que demostrar que cada una de estas partes son usables.
-    - Se debe de utilizar una arquitectura DAO.
-    - La entrega se realizará a través del aula virtual y github. 
+    Cuando un usuario haga login, se tiene que actualizar la última vez que lo hizo.
+    Un usuario puede ver todos los libros que ha leido.
+    Un usuario puede ver todos los libros disponibles
+    El main tiene que demostrar que cada una de estas partes son usables.
+    Se debe de utilizar una arquitectura DAO.
+    La entrega se realizará a través del aula virtual y github. 
 
 Todos los puntos menos el último (que no puntúa) puntúan lo mismo, te recomiendo que dediques solo 3 horas a realizar esta tarea.
  */
@@ -76,22 +76,22 @@ public class Exec {
             }
         } while (!option.equals("*"));
     }
-    
-    public static void getLastLogIn(){
-        try{
-        System.out.println("Última vez: " + user.getFormattedLogIn()); 
-        }catch(NullPointerException nullException){
+
+    public static void getLastLogIn() {
+        try {
+            System.out.println("Última vez: " + user.getFormattedLogIn());
+        } catch (NullPointerException nullException) {
             System.err.println("No hay login que mostrar");
         }
     }
-    
-    public static void getBooks(){
+
+    public static void getBooks() {
         for (Book book : bookController.getBooks()) {
             System.out.println(book);
         }
     }
-    
-    public static void getReadedBooks(){
+
+    public static void getReadedBooks() {
         for (Book readedBook : user.getReadedBooks()) {
             System.out.println(readedBook);
         }
@@ -114,19 +114,26 @@ public class Exec {
 
     public static void writeBook() {
         String title;
-        long pages;
+        long pages = 0;
+        boolean flag = false;
         System.out.print("Introducir título: ");
         title = sc.nextLine();
-        System.out.println("Introducir número de páginas: ");
-        pages = Long.parseLong(sc.nextLine());
+        do {
+            System.out.println("Introducir número de páginas: ");
+            try{
+                pages = Long.parseLong(sc.nextLine());
+                flag = true;
+            }catch(NumberFormatException nbe){
+                System.err.println("Eso no es un número...");
+            }
+            
+        } while (!flag);
         Book book = new Book(title, pages);
-        System.out.println("Libro " + book);
-        System.out.println("author " + user);
         bookController.createBook(book);
         user.getWrittenBooks().add(book);
         book.getWrittenAuthors().add(user);
         authorController.updateAuthor(user);
-        
+
     }
 
     public static void commentBook() {
@@ -178,13 +185,13 @@ public class Exec {
             System.out.print("Introducir opción: ");
             option = sc.nextLine();
             if (!option.equals("1") && !option.equals("2") && !option.equals("3") && !option.equals("4") && !option.equals("5")
-                    && !option.equals("6")&& !option.equals("7") && !option.equals("*")) {
+                    && !option.equals("6") && !option.equals("7") && !option.equals("*")) {
                 System.err.println("Opción incorrecta");
             } else {
                 return option;
             }
         } while (!option.equals("1") && !option.equals("2") && !option.equals("3") && !option.equals("4") && !option.equals("5")
-                && !option.equals("6") && !option.equals("7")&& !option.equals("*"));
+                && !option.equals("6") && !option.equals("7") && !option.equals("*"));
 
         return null;
     }
